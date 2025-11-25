@@ -26,7 +26,6 @@ const getImageURL = (name: string) => {
     return '/placeholder-lawyer.jpg';
 };
 
-// --- DATA DE ABOGADOS COMPLETA Y DEFINITIVA (26 ENTRADAS) ---
 const attorneys = [
   // --- FUNDADORES Y SOCIOS PRINCIPALES ---
   {
