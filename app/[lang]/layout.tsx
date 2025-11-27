@@ -4,14 +4,29 @@ import WhatsAppButton from '../components/WhatsAppButton';
 import { translations, Language } from '../lib/translations';
 import Script from 'next/script';
 
+// --- CORRECCIÓN FINAL DEL IMPORT CSS ---
+// Al estar en 'app/[lang]/layout.tsx', subimos un nivel (..) para encontrar 'app/globals.css'
+import '../globals.css'; 
+
+// --- DEFINICIONES DE TIPOS ---
+
+interface LayoutParams {
+  lang: Language; 
+}
+
 type Props = {
-  params: Promise<{ lang: Language }>;
+  params: Promise<{ lang: string }>;
   children: React.ReactNode;
 };
 
+// --- GENERATE METADATA ---
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
-  const t = translations[lang];
+  
+  // Validación de seguridad por si acaso llega algo que no es idioma
+  const currentLang = (lang === 'es' || lang === 'en') ? (lang as Language) : 'es';
+  const t = translations[currentLang];
   
   return {
     title: t.seo.home.title,
@@ -23,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: t.seo.home.description,
       url: 'https://comopuedoarreglar.com',
       siteName: 'Como Puedo Arreglar',
-      locale: lang === 'es' ? 'es_MX' : 'en_US',
+      locale: currentLang === 'es' ? 'es_MX' : 'en_US',
       type: 'website',
       images: [
         {
@@ -52,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     alternates: {
-      canonical: `https://comopuedoarreglar.com/${lang}`,
+      canonical: `https://comopuedoarreglar.com/${currentLang}`,
       languages: {
         'es-MX': 'https://comopuedoarreglar.com/es',
         'en-US': 'https://comopuedoarreglar.com/en',
@@ -65,11 +80,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// --- LAYOUT PRINCIPAL ---
+
 export default async function LangLayout({ children, params }: Props) {
   const { lang } = await params;
-  const t = translations[lang];
+  // Validación/Casteo
+  const currentLang = (lang === 'es' || lang === 'en') ? (lang as Language) : 'es';
+  const t = translations[currentLang];
   
-  // Schema.org JSON-LD
   const schemaData = {
     '@context': 'https://schema.org',
     '@type': 'LegalService',
@@ -77,7 +95,7 @@ export default async function LangLayout({ children, params }: Props) {
     alternateName: 'Como Puedo Arreglar',
     description: t.seo.home.description,
     url: 'https://comopuedoarreglar.com',
-    telephone: '+1-555-555-5555',
+    telephone: '+1-866-979-5146',
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
@@ -130,37 +148,43 @@ export default async function LangLayout({ children, params }: Props) {
   };
   
   return (
-    <LanguageProvider initialLanguage={lang}>
-      {/* Schema.org JSON-LD */}
-      <Script
-        id="schema-org"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-      />
-      
-      {/* Google Analytics - Actualizar con tu ID */}
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-      />
-      <Script
-        id="google-analytics"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX');
-          `,
-        }}
-      />
-      
-      {children}
-      <WhatsAppButton />
-    </LanguageProvider>
+    <html lang={currentLang} suppressHydrationWarning>
+      <head>
+        <Script
+          id="schema-org"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+          strategy="beforeInteractive"
+        />
+        
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XXXXXXXXXX');
+            `,
+          }}
+        />
+      </head>
+      <body suppressHydrationWarning>
+        <LanguageProvider initialLanguage={currentLang}>
+          {children}
+          <WhatsAppButton />
+        </LanguageProvider>
+      </body>
+    </html>
   );
 }
 
 export function generateStaticParams() {
-  return [{ lang: 'es' as Language }, { lang: 'en' as Language }];
+  return [{ lang: 'es' }, { lang: 'en' }];
 }

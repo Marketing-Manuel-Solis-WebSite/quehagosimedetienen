@@ -1,4 +1,3 @@
-// app/layout.tsx (ROOT LAYOUT)
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -12,11 +11,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html suppressHydrationWarning>
-      <body suppressHydrationWarning>
-        {children}
-      </body>
-    </html>
-  );
+  return children; // Solo pasa los children, el html/body viene del [lang]/layout
 }
