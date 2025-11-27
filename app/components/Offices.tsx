@@ -3,6 +3,7 @@
 import { MapPin, Phone, Mail, ExternalLink, Scale } from 'lucide-react'
 import Image from 'next/image'
 import { motion, Variants, Transition } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext'
 
 // Función auxiliar para generar URLs de Google Maps válidas
 const generateMapUrl = (address: string) => {
@@ -23,7 +24,7 @@ const offices = [
     address: '6657 Navigation Blvd, Houston, Texas 77011',
     phone: '(713) 701-1731',
     email: 'houston@manuelsolis.com',
-    mapUrl: generateMapUrl('6657 Navigation Blvd, Houston, Texas 77011'), // URL CORREGIDA
+    mapUrl: generateMapUrl('6657 Navigation Blvd, Houston, Texas 77011'),
     image: '/offices/houston.jpg',
   },
   // 2. HARLINGEN
@@ -33,17 +34,17 @@ const offices = [
     address: '320 E. Jackson St., Harlingen, Texas 78550',
     phone: '(956) 597-7090',
     email: 'harlingen@manuelsolis.com',
-    mapUrl: generateMapUrl('320 E. Jackson St., Harlingen, Texas 78550'), // URL CORREGIDA
+    mapUrl: generateMapUrl('320 E. Jackson St., Harlingen, Texas 78550'),
     image: '/offices/houston.jpg',
   },
-  // 3. HOUSTON BELLAIRE (CORRECCIÓN DE ERROR 404)
+  // 3. HOUSTON BELLAIRE
   {
     city: 'HOUSTON BELLAIRE',
     subtitle: 'SERVICIO EN CHINO',
     address: '9600 Bellaire Blvd, Suite 237, Houston, TX 77036',
     phone: '(713) 701-1731',
     email: 'bellaire@manuelsolis.com',
-    mapUrl: generateMapUrl('9600 Bellaire Blvd, Suite 237, Houston, TX 77036'), // URL CORREGIDA
+    mapUrl: generateMapUrl('9600 Bellaire Blvd, Suite 237, Houston, TX 77036'),
     image: '/offices/houston.jpg',
   },
   {
@@ -52,7 +53,7 @@ const offices = [
     address: '1120 Empire Central place, Dallas, Texas 75247',
     phone: '(214) 753-8315',
     email: 'dallas@manuelsolis.com',
-    mapUrl: generateMapUrl('1120 Empire Central place, Dallas, Texas 75247'), // URL CORREGIDA
+    mapUrl: generateMapUrl('1120 Empire Central place, Dallas, Texas 75247'),
     image: '/offices/dallas.jpg',
   },
   {
@@ -61,7 +62,7 @@ const offices = [
     address: '3632 Admiral Street, El Paso, Texas 79925',
     phone: '(915) 233-7127',
     email: 'elpaso@manuelsolis.com',
-    mapUrl: generateMapUrl('3632 Admiral Street, El Paso, Texas 79925'), // URL CORREGIDA
+    mapUrl: generateMapUrl('3632 Admiral Street, El Paso, Texas 79925'),
     image: '/offices/dallas.jpg',
   },
   // LOS ANGELES
@@ -71,7 +72,7 @@ const offices = [
     address: '8337 Telegraph Rd, Unit 115, Pico Rivera, California 90660',
     phone: '(213) 784-1554',
     email: 'losangeles@manuelsolis.com',
-    mapUrl: generateMapUrl('8337 Telegraph Rd, Unit 115, Pico Rivera, California 90660'), // URL CORREGIDA
+    mapUrl: generateMapUrl('8337 Telegraph Rd, Unit 115, Pico Rivera, California 90660'),
     image: '/offices/losangeles.jpg',
   },
   // CHICAGO
@@ -81,7 +82,7 @@ const offices = [
     address: '6000 West Cermak Road, Cicero, Illinois 60804',
     phone: '(312) 477-0389',
     email: 'chicago@manuelsolis.com',
-    mapUrl: generateMapUrl('6000 West Cermak Road, Cicero, Illinois 60804'), // URL CORREGIDA
+    mapUrl: generateMapUrl('6000 West Cermak Road, Cicero, Illinois 60804'),
     image: '/offices/chicago.jpg',
   },
   // DENVER
@@ -91,7 +92,7 @@ const offices = [
     address: '5400 Ward Road, Building IV, Arvada, Colorado 80002',
     phone: '(720) 358-8973',
     email: 'denver@manuelsolis.com',
-    mapUrl: generateMapUrl('5400 Ward Road, Building IV, Arvada, Colorado 80002'), // URL CORREGIDA
+    mapUrl: generateMapUrl('5400 Ward Road, Building IV, Arvada, Colorado 80002'),
     image: '/offices/losangeles.jpg',
   },
   // MEMPHIS
@@ -101,7 +102,7 @@ const offices = [
     address: '3385 Airways Boulevard, Suite 320, Memphis, Tennessee 38116',
     phone: '(901) 557-8357',
     email: 'memphis@manuelsolis.com',
-    mapUrl: generateMapUrl('3385 Airways Boulevard, Suite 320, Memphis, Tennessee 38116'), // URL CORREGIDA
+    mapUrl: generateMapUrl('3385 Airways Boulevard, Suite 320, Memphis, Tennessee 38116'),
     image: '/offices/chicago.jpg',
   },
 ].sort((a, b) => a.city.localeCompare(b.city)) 
@@ -132,6 +133,8 @@ const itemVariants: Variants = {
 
 // --- COMPONENTE PRINCIPAL ---
 export default function Offices() {
+  const { language } = useLanguage();
+
   return (
     <section id="oficinas" className={`py-32 bg-white text-[${PRIMARY_COLOR_DARK}] font-sans`}>
       <div className="max-w-7xl mx-auto px-4">
@@ -146,15 +149,23 @@ export default function Offices() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-gray-200/60 backdrop-blur-xl shadow-sm mb-8">
               <Scale size={14} className={`text-[${ACCENT_COLOR_GOLD}] fill-[${ACCENT_COLOR_GOLD}]`} />
-              <span className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase">CONTACTO GLOBAL</span>
+              <span className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase">
+                {language === 'es' ? 'CONTACTO GLOBAL' : 'GLOBAL CONTACT'}
+              </span>
             </div>
             
             {/* Título: Font Serif Black, Dorado en acento */}
             <h2 className={`text-4xl md:text-5xl font-serif font-black mb-4 text-[${PRIMARY_COLOR_DARK}]`}>
-              Nuestras <span className={`text-transparent bg-clip-text bg-gradient-to-r from-[${ACCENT_COLOR_GOLD}] to-[#D4AF37]`}>Oficinas</span>
+              {language === 'es' ? 'Nuestras' : 'Our'}{' '}
+              <span className={`text-transparent bg-clip-text bg-gradient-to-r from-[${ACCENT_COLOR_GOLD}] to-[#D4AF37]`}>
+                {language === 'es' ? 'Oficinas' : 'Offices'}
+              </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Haga clic en una de las ciudades siguientes para leer más
+              {language === 'es' 
+                ? 'Haga clic en una de las ciudades siguientes para leer más'
+                : 'Click on one of the following cities to read more'
+              }
             </p>
           </motion.div>
         
@@ -214,7 +225,9 @@ export default function Offices() {
                     className={`flex items-center gap-2 text-[${PRIMARY_COLOR_DARK}] hover:text-[${ACCENT_COLOR_GOLD}] transition-colors font-bold text-sm`}
                   >
                     <ExternalLink className="w-4 h-4" />
-                    <span className="underline">Obtener dirección</span>
+                    <span className="underline">
+                      {language === 'es' ? 'Obtener dirección' : 'Get directions'}
+                    </span>
                   </a>
 
                   {/* Email */}

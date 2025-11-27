@@ -1,8 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 
 export default function ContactForm() {
+  const { language } = useLanguage();
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -54,11 +57,14 @@ export default function ContactForm() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              SOLICITE SU <span className="text-black">CONSULTA</span>
+              {language === 'es' ? 'SOLICITE SU' : 'REQUEST YOUR'}{' '}
+              <span className="text-black">{language === 'es' ? 'CONSULTA' : 'CONSULTATION'}</span>
             </h2>
             <p className="text-lg text-white">
-              Llene este formulario y le llamaremos en unos 10 minutos en horas de trabajo. 
-              También puede llamarnos y estaremos encantados de contestar sus preguntas.
+              {language === 'es'
+                ? 'Llene este formulario y le llamaremos en unos 10 minutos en horas de trabajo. También puede llamarnos y estaremos encantados de contestar sus preguntas.'
+                : 'Fill out this form and we will call you within 10 minutes during business hours. You can also call us and we will be happy to answer your questions.'
+              }
             </p>
           </div>
 
@@ -66,7 +72,7 @@ export default function ContactForm() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="firstName" className="block text-lg font-medium mb-2">
-                  Nombre *
+                  {language === 'es' ? 'Nombre' : 'First Name'} *
                 </label>
                 <input
                   type="text"
@@ -77,13 +83,13 @@ export default function ContactForm() {
                   required
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#B2904D] 
                     focus:outline-none transition-colors"
-                  placeholder="Nombre"
+                  placeholder={language === 'es' ? 'Nombre' : 'First Name'}
                 />
               </div>
 
               <div>
                 <label htmlFor="lastName" className="block text-lg font-medium mb-2">
-                  Apellido *
+                  {language === 'es' ? 'Apellido' : 'Last Name'} *
                 </label>
                 <input
                   type="text"
@@ -94,7 +100,7 @@ export default function ContactForm() {
                   required
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#B2904D] 
                     focus:outline-none transition-colors"
-                  placeholder="Apellido"
+                  placeholder={language === 'es' ? 'Apellido' : 'Last Name'}
                 />
               </div>
             </div>
@@ -102,7 +108,7 @@ export default function ContactForm() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="phone" className="block text-lg font-medium mb-2">
-                  Número de Teléfono *
+                  {language === 'es' ? 'Número de Teléfono' : 'Phone Number'} *
                 </label>
                 <input
                   type="tel"
@@ -113,13 +119,13 @@ export default function ContactForm() {
                   required
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#B2904D] 
                     focus:outline-none transition-colors"
-                  placeholder="Número de Teléfono"
+                  placeholder={language === 'es' ? 'Número de Teléfono' : 'Phone Number'}
                 />
               </div>
 
               <div>
                 <label htmlFor="email" className="block text-lg font-medium mb-2">
-                  Correo Electrónico *
+                  {language === 'es' ? 'Correo Electrónico' : 'Email'} *
                 </label>
                 <input
                   type="email"
@@ -130,14 +136,17 @@ export default function ContactForm() {
                   required
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#B2904D] 
                     focus:outline-none transition-colors"
-                  placeholder="Correo Electrónico"
+                  placeholder={language === 'es' ? 'Correo Electrónico' : 'Email'}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="message" className="block text-lg font-medium mb-2">
-                ¿Cómo te podemos Ayudar? Danos detalles de tu caso. *
+                {language === 'es' 
+                  ? '¿Cómo te podemos Ayudar? Danos detalles de tu caso.' 
+                  : 'How can we help you? Give us details of your case.'
+                } *
               </label>
               <textarea
                 id="message"
@@ -148,7 +157,7 @@ export default function ContactForm() {
                 rows={6}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#B2904D] 
                   focus:outline-none transition-colors resize-none"
-                placeholder="Danos Detalles de Tu Caso"
+                placeholder={language === 'es' ? 'Danos Detalles de Tu Caso' : 'Give Us Details of Your Case'}
               />
             </div>
 
@@ -162,12 +171,12 @@ export default function ContactForm() {
                 className="mt-1 w-5 h-5 text-[#B2904D] focus:ring-[#B2904D] border-gray-300 rounded"
               />
               <label htmlFor="consent" className="text-sm text-gray-700">
-                Acepto recibir mensajes de texto de marketing y otros mensajes del Law Office of 
-                Manuel Solis al número proporcionado. Pueden aplicarse tarifas de mensajes y datos. 
-                El consentimiento no es una condición para recibir servicios. Para más información, 
-                por favor revise nuestra{' '}
-                <a href="/politica-de-privacidad" className="text-[#B2904D] hover:underline">
-                  Política de Privacidad
+                {language === 'es'
+                  ? 'Acepto recibir mensajes de texto de marketing y otros mensajes del Law Office of Manuel Solis al número proporcionado. Pueden aplicarse tarifas de mensajes y datos. El consentimiento no es una condición para recibir servicios. Para más información, por favor revise nuestra'
+                  : 'I agree to receive marketing text messages and other messages from the Law Office of Manuel Solis at the number provided. Message and data rates may apply. Consent is not a condition for receiving services. For more information, please review our'
+                }{' '}
+                <a href={`/${language}/politica-de-privacidad`} className="text-[#B2904D] hover:underline">
+                  {language === 'es' ? 'Política de Privacidad' : 'Privacy Policy'}
                 </a>
                 .
               </label>
@@ -175,13 +184,19 @@ export default function ContactForm() {
 
             {submitStatus === 'success' && (
               <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                ¡Gracias! Hemos recibido su mensaje y nos pondremos en contacto pronto.
+                {language === 'es'
+                  ? '¡Gracias! Hemos recibido su mensaje y nos pondremos en contacto pronto.'
+                  : 'Thank you! We have received your message and will contact you soon.'
+                }
               </div>
             )}
 
             {submitStatus === 'error' && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo.
+                {language === 'es'
+                  ? 'Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo.'
+                  : 'There was an error submitting the form. Please try again.'
+                }
               </div>
             )}
 
@@ -191,7 +206,10 @@ export default function ContactForm() {
               className="w-full bg-[#B2904D] text-white py-4 px-8 rounded-lg font-semibold text-lg 
                 hover:bg-[#9a7a3d] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Enviando...' : 'Enviar'}
+              {isSubmitting 
+                ? (language === 'es' ? 'Enviando...' : 'Sending...') 
+                : (language === 'es' ? 'Enviar' : 'Send')
+              }
             </button>
           </form>
         </div>

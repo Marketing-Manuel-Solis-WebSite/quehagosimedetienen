@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { Star, Play, X } from 'lucide-react'
 import Image from 'next/image'
+import { useLanguage } from '../context/LanguageContext'
 
-// Definimos la interfaz para las props del Modal para corregir el error de "any"
 interface VideoModalProps {
   videoId: string;
   onClose: () => void;
@@ -24,7 +24,6 @@ const testimonials = [
   },
 ]
 
-// Componente de Modal con tipos definidos
 function VideoModal({ videoId, onClose }: VideoModalProps) {
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=1`;
 
@@ -45,7 +44,6 @@ function VideoModal({ videoId, onClose }: VideoModalProps) {
           <X className="w-6 h-6" />
         </button>
 
-        {/* Eliminado 'wmode' para corregir error de TS */}
         <iframe
           src={embedUrl}
           title="Testimonio de Cliente"
@@ -59,6 +57,7 @@ function VideoModal({ videoId, onClose }: VideoModalProps) {
 }
 
 export default function Testimonials() {
+  const { language } = useLanguage();
   const current = testimonials[0]; 
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
@@ -76,8 +75,10 @@ export default function Testimonials() {
           
           <div className="text-center">
             <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-800">
-              Lo que dicen <br />
-              <span className="text-[#B2904D]">nuestros clientes</span>
+              {language === 'es' ? 'Lo que dicen' : 'What our clients say'} <br />
+              <span className="text-[#B2904D]">
+                {language === 'es' ? 'nuestros clientes' : ''}
+              </span>
             </h2>
           </div>
 
@@ -85,7 +86,7 @@ export default function Testimonials() {
           <div className="hidden md:block w-16 h-1 bg-[#B2904D] mx-8 transform rotate-[-6deg] opacity-70"></div>
         </div>
 
-        {/* CONTENIDO PRINCIPAL - Sin tarjeta contenedora (shadow box eliminada) */}
+        {/* CONTENIDO PRINCIPAL */}
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
             
@@ -101,7 +102,6 @@ export default function Testimonials() {
                     alt={current.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    // CAMBIO: object-contain para que la imagen NO se corte
                     className="object-contain transition-transform duration-700 group-hover:scale-105"
                   />
                   
@@ -132,7 +132,7 @@ export default function Testimonials() {
                     ))}
                     </div>
 
-                    {/* Comentario sin borde lateral */}
+                    {/* Comentario */}
                     <p className="text-2xl text-gray-800 italic leading-relaxed font-light">
                     &quot;{current.comment}&quot;
                     </p>

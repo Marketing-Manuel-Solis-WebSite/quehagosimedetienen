@@ -1,17 +1,21 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 export default function Footer() {
+  const { language } = useLanguage();
   const currentYear = new Date().getFullYear()
 
   const footerLinks = [
-    { name: 'INICIO', href: '/' },
-    { name: 'AREAS LEGALES', href: '/servicios' },
-    { name: 'TESTIMONIALES', href: '/Testimonios' },
-    { name: 'ABOGADOS', href: '/abogados' },
-    { name: 'OFICINAS', href: '/oficinas' },
-    { name: 'INFORMACIÓN', href: '/noticias' },
+    { name: language === 'es' ? 'INICIO' : 'HOME', href: `/${language}` },
+    { name: language === 'es' ? 'AREAS LEGALES' : 'LEGAL AREAS', href: `/${language}/servicios` },
+    { name: language === 'es' ? 'TESTIMONIALES' : 'TESTIMONIALS', href: `/${language}/Testimonios` },
+    { name: language === 'es' ? 'ABOGADOS' : 'ATTORNEYS', href: `/${language}/abogados` },
+    { name: language === 'es' ? 'OFICINAS' : 'OFFICES', href: `/${language}/oficinas` },
+    { name: language === 'es' ? 'INFORMACIÓN' : 'INFORMATION', href: `/${language}/noticias` },
   ]
 
   const socialLinks = [
@@ -47,7 +51,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-16">
         {/* Logo and Social */}
         <div className="text-center mb-12">
-          <Link href="/" className="inline-block mb-8">
+          <Link href={`/${language}`} className="inline-block mb-8">
             <Image
               src="/logo-manuel-solis.png"
               alt="Logo Manuel Solis"
@@ -98,19 +102,19 @@ export default function Footer() {
           <ul className="flex flex-wrap justify-center gap-6 text-sm">
             <li>
               <Link
-                href="/category/proteccion-legal-para-migrantes"
+                href={`/${language}/category/proteccion-legal-para-migrantes`}
                 className="hover:text-white/80 transition-colors duration-300"
               >
-                Protección legal para migrantes
+                {language === 'es' ? 'Protección legal para migrantes' : 'Legal protection for migrants'}
               </Link>
             </li>
             <li className="text-white/40">|</li>
             <li>
               <Link
-                href="/category/derechos-de-migrantes"
+                href={`/${language}/category/derechos-de-migrantes`}
                 className="hover:text-white/80 transition-colors duration-300"
               >
-                Derechos de migrantes
+                {language === 'es' ? 'Derechos de migrantes' : 'Migrant rights'}
               </Link>
             </li>
           </ul>
@@ -119,7 +123,10 @@ export default function Footer() {
         {/* Copyright */}
         <div className="text-center text-sm border-t border-white/20 pt-8">
           <p className="text-white/90">
-            Copyright © {currentYear} Todos los Derechos Reservados.{' '}
+            {language === 'es' 
+              ? `Copyright © ${currentYear} Todos los Derechos Reservados.` 
+              : `Copyright © ${currentYear} All Rights Reserved.`
+            }{' '}
             <Link href="/" className="text-white hover:text-white/80 transition-colors duration-300 font-medium">
               ManuelSolis.com
             </Link>

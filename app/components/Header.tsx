@@ -3,74 +3,97 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-// Importamos ChevronDown para el indicador de submenú
-import { Menu, X, ChevronDown } from 'lucide-react' 
+import { Menu, X, ChevronDown } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 // --- COLORES ORIGINALES ---
 const PRIMARY_COLOR_ORIGINAL = '#B2904D'; // Dorado (fondo principal)
 const ACCENT_COLOR_DARK = '#002342'; // Azul Oscuro (texto principal y hover)
 
 export default function Header() {
+  const { language } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const menuItems = [
     { 
-      name: 'OFICINAS', href: '/oficinas', type: 'link'
-    },
-    { 
-      name: 'ÁREAS LEGALES', 
-      href: '', 
-      type: 'dropdown',
-      key: 'areas',
-      submenu: [
-        { name: 'Accidentes', href: '/servicios/accidentes' },
-        { name: 'Migración', href: '/servicios/inmigracion' },
-        { name: 'Seguros', href: '/servicios/seguros' },
-        { name: 'Ley Criminal', href: '/servicios/ley-criminal' },
-        { name: 'Familia', href: '/servicios/familia' },
-        { name: 'Planificación Familiar', href: '/servicios/planificacion' },
-      ]
-    },
-    { name: 'CLIENTES DETENIDOS', href: '/clientes-detenidos', type: 'link' },
-    { name: 'TESTIMONIOS', href: '/Testimonios', type: 'link' },
-    { 
-      name: 'ABOGADOS', 
-      href: '/abogados',
+      name: language === 'es' ? 'OFICINAS' : 'OFFICES',
+      href: `/${language}/oficinas`,
       type: 'link'
     },
     { 
-      name: 'INFORMACIÓN', 
+      name: language === 'es' ? 'ÁREAS LEGALES' : 'LEGAL AREAS',
+      href: '', 
+      type: 'dropdown',
+      key: 'areas',
+      submenu: language === 'es'
+        ? [
+          { name: 'Accidentes', href: `/${language}/servicios/accidentes` },
+          { name: 'Migración', href: `/${language}/servicios/inmigracion` },
+          { name: 'Seguros', href: `/${language}/servicios/seguros` },
+          { name: 'Ley Criminal', href: `/${language}/servicios/ley-criminal` },
+          { name: 'Familia', href: `/${language}/servicios/familia` },
+          { name: 'Planificación Familiar', href: `/${language}/servicios/planificacion` },
+        ]
+        : [
+          { name: 'Accidents', href: `/${language}/servicios/accidentes` },
+          { name: 'Immigration', href: `/${language}/servicios/inmigracion` },
+          { name: 'Insurance', href: `/${language}/servicios/seguros` },
+          { name: 'Criminal Law', href: `/${language}/servicios/ley-criminal` },
+          { name: 'Family', href: `/${language}/servicios/familia` },
+          { name: 'Estate Planning', href: `/${language}/servicios/planificacion` },
+        ]
+    },
+    {
+      name: language === 'es' ? 'CLIENTES DETENIDOS' : 'DETAINED CLIENTS',
+      href: `/${language}/clientes-detenidos`,
+      type: 'link'
+    },
+    {
+      name: language === 'es' ? 'TESTIMONIOS' : 'TESTIMONIALS',
+      href: `/${language}/Testimonios`,
+      type: 'link'
+    },
+    { 
+      name: language === 'es' ? 'ABOGADOS' : 'ATTORNEYS',
+      href: `/${language}/abogados`,
+      type: 'link'
+    },
+    { 
+      name: language === 'es' ? 'INFORMACIÓN' : 'INFORMATION',
       href: '', 
       type: 'dropdown',
       key: 'info',
-      submenu:[
-        { name: 'Recursos', href: '/informacion/recursos' },
-        { name: 'Noticias', href: '/informacion/noticias' },
-        { name: 'Preguntas Frecuentes', href: '/informacion/faq' }
-      ] 
+      submenu: language === 'es'
+        ? [
+          { name: 'Recursos', href: `/${language}/informacion/recursos` },
+          { name: 'Noticias', href: `/${language}/informacion/noticias` },
+          { name: 'Preguntas Frecuentes', href: `/${language}/informacion/faq` }
+        ]
+        : [
+          { name: 'Resources', href: `/${language}/informacion/recursos` },
+          { name: 'News', href: `/${language}/informacion/noticias` },
+          { name: 'FAQ', href: `/${language}/informacion/faq` }
+        ]
     },
   ]
 
   const handleDropdownClick = (key: string, hasSubmenu: boolean) => {
     if (hasSubmenu) {
-        // Toggle el submenú en móvil
         setOpenSubmenu(openSubmenu === key ? null : key);
     } else {
-        // Cierra el menú en móvil para enlaces directos
         setIsMenuOpen(false);
         setOpenSubmenu(null);
     }
   };
 
   return (
-    // RESTAURADO EL COLOR DORADO como fondo principal
     <header className={`fixed top-0 w-full bg-[${PRIMARY_COLOR_ORIGINAL}] z-50 shadow-lg`}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          <Link href="/" className="flex-shrink-0">
+          <Link href={`/${language}`} className="flex-shrink-0">
             <Image
-              // Asumimos que la imagen sigue siendo visible sobre el dorado
               src="/logo-manuel-solis.png" 
               alt="Logo Manuel Solis"
               width={276}
@@ -87,18 +110,14 @@ export default function Header() {
                 key={item.name} 
                 className="relative group h-full flex items-center" 
               >
-                {/* Contenedor del enlace principal / botón de despliegue */}
                 {item.type === 'dropdown' ? (
-                    // Botón de despliegue sin href
                     <div
                         className={`text-white hover:text-[${ACCENT_COLOR_DARK}] font-bold transition-colors text-sm uppercase cursor-pointer flex items-center tracking-wider`}
                     >
                         {item.name}
-                        {/* Indicador visual de que es un despliegue */}
                         <ChevronDown size={14} className={`ml-1 transition-transform duration-200 group-hover:rotate-180`} />
                     </div>
                 ) : (
-                    // Enlace normal
                     <Link
                         href={item.href}
                         className={`text-white hover:text-[${ACCENT_COLOR_DARK}] font-bold transition-colors text-sm uppercase tracking-wider`}
@@ -107,7 +126,7 @@ export default function Header() {
                     </Link>
                 )}
 
-                {/* Submenú de escritorio: Diseño limpio con acentos oscuros */}
+                {/* Submenú de escritorio */}
                 {item.submenu && (
                   <div className="absolute left-0 top-full mt-0 pt-2 w-64 
                                   bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl 
@@ -118,7 +137,6 @@ export default function Header() {
                         <Link
                           key={subItem.name}
                           href={subItem.href}
-                          // Texto Azul Oscuro, hover en Dorado/Azul
                           className={`block px-4 py-2 text-[${ACCENT_COLOR_DARK}] hover:bg-[${ACCENT_COLOR_DARK}]/5 hover:text-[${PRIMARY_COLOR_ORIGINAL}] transition-colors text-sm font-medium`}
                         >
                           {subItem.name}
@@ -129,14 +147,8 @@ export default function Header() {
                 )}
               </div>
             ))}
-            {/* Botón de Idioma */}
-            <Link
-              href="/en"
-              className={`flex items-center text-white hover:text-[${ACCENT_COLOR_DARK}] font-bold text-sm uppercase tracking-wider`}
-            >
-              <span className="mr-2">🇺🇸</span>
-              ENGLISH
-            </Link>
+            {/* Language Switcher Component */}
+            <LanguageSwitcher />
           </nav>
 
           {/* --- BOTÓN MENÚ MÓVIL --- */}
@@ -150,7 +162,6 @@ export default function Header() {
         </div>
 
         {/* --- MENÚ MÓVIL DESPLEGADO --- */}
-        {/* El color de fondo del menú móvil también es el color dorado original */}
         {isMenuOpen && (
           <nav className={`lg:hidden pb-4 transition-all duration-300 bg-[${PRIMARY_COLOR_ORIGINAL}]`}>
             {menuItems.map((item) => (
@@ -160,7 +171,6 @@ export default function Header() {
                     onClick={() => handleDropdownClick(item.key || item.name, !!item.submenu)}
                 >
                     <Link
-                        // Si es desplegable, previene la navegación en móvil para abrir el submenú
                         href={item.submenu ? '' : item.href} 
                         className={`block py-3 text-white font-bold hover:text-[${ACCENT_COLOR_DARK}] transition-colors ${item.submenu ? 'w-full' : ''}`}
                         onClick={item.submenu ? (e) => e.preventDefault() : () => handleDropdownClick(item.name, false)}
@@ -182,7 +192,6 @@ export default function Header() {
                       <Link
                         key={subItem.name}
                         href={subItem.href}
-                        // Enlaces del submenú en color blanco con acento oscuro al hacer hover
                         className={`block py-2 text-white/80 hover:text-[${ACCENT_COLOR_DARK}] text-sm transition-colors`}
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -193,15 +202,10 @@ export default function Header() {
                 )}
               </div>
             ))}
-             {/* Botón de Idioma Móvil */}
-            <Link
-              href="/en"
-              className={`flex items-center py-3 text-white hover:text-[${ACCENT_COLOR_DARK}] font-bold text-sm uppercase tracking-wider`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span className="mr-2">🇺🇸</span>
-              ENGLISH
-            </Link>
+            {/* Language Switcher Component móvil */}
+            <div className="py-3">
+              <LanguageSwitcher />
+            </div>
           </nav>
         )}
       </div>

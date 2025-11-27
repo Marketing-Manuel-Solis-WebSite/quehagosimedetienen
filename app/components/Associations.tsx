@@ -1,4 +1,7 @@
+'use client'
+
 import Image from 'next/image'
+import { useLanguage } from '../context/LanguageContext'
 
 const associations = [
   { name: 'American Bar Association', logo: '/associations/american-bar.png' },
@@ -10,12 +13,17 @@ const associations = [
 ]
 
 export default function Associations() {
+  const { language } = useLanguage();
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12"> 
           <h2 className="text-3xl md:text-4xl font-bold">
-            Somos Parte de una Comunidad Legal Confiable
+            {language === 'es' 
+              ? 'Somos Parte de una Comunidad Legal Confiable'
+              : 'We Are Part of a Trusted Legal Community'
+            }
           </h2>
         </div>
 
